@@ -1,47 +1,76 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import {
   Text, Image, StyleSheet, Dimensions, ImageBackground, StatusBar, View
 } from 'react-native';
 
+import {
+   TextInput,
+   Button
+} from 'react-native-paper';
+
+
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     flex: 1,
-    paddingHorizontal: 20,
     backgroundColor: '#7159c1'
   },
-  fileName: {
-    fontWeight: 'bold',
-    marginTop: 5,
+  form: {
+    width: 300,
+    marginTop: 100
   },
-  instructions: {
-    color: '#DDD',
-    fontSize: 14,
-    marginTop: 20,
-    textAlign: 'center',
-  },
-  logo: {
-    height: Dimensions.get('window').height * 0.11,
-    marginVertical: Dimensions.get('window').height * 0.11,
-    width: Dimensions.get('window').height * 0.11 * (1950 / 662),
-  },
-  welcome: {
+  textName: {
     color: '#fff',
     fontSize: 22,
     fontWeight: 'bold',
     textAlign: 'center',
+    margin: 20
   },
+  button: {
+    marginTop: 20,
+    width: 300,
+    borderColor: '#fff'
+  },
+  inputUser: {
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
+    borderBottomLeftRadius: 5,
+    borderBottomRightRadius: 5
+  }
 });
 
-const Main = () => (
+export default function Main(){
+  const [userName, setUserName] = useState('');
+  const [loadingButton, setLoadingButton] = useState(false);
 
-  <View
-    style={styles.container}
-  >
-    <StatusBar barStyle="light-content" backgroundColor="#7159c1" />
+  return(
+    <View
+      style={styles.container}
+    >
+      <StatusBar barStyle="light-content" backgroundColor="#7159c1" />
+
+      <View
+        style={styles.form}
+      >
+          <Text style={styles.textName}>Manda teu nome aí </Text>
+          <TextInput
+            label='Usuário'
+            value={userName}
+            style={styles.inputUser}
+            onChangeText={ text => setUserName(text)}
+          />
+          <Button
+            color='#fff'
+            loading={loadingButton}
+            style={styles.button}
+            icon="send" 
+            mode='outlined' 
+            onPress={() => setLoadingButton(true)}>
+              Manda pá geral
+          </Button>
+      </View>
     
-  </View>
-);
-
-export default Main;
+    </View>
+  );
+}
