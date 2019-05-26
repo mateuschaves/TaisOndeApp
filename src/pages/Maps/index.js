@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, PermissionsAndroid } from 'react-native';
 
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-end',
     alignItems: 'center',
   },
   map: {
@@ -16,17 +16,51 @@ const styles = StyleSheet.create({
 
 
 export default class Maps extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      latitude: -8.2798452,
+      longitude: -35.9269217,
+      latitudeDelta: 0.0122,
+      longitudeDelta: 0.0121,
+    };
+  }
+
   componentDidMount() {
     this.requestLocationPermission();
     this.getPosition();
+    this.watchPosition();
+  }
+
+  watchPosition = () => {
+    this.watchId = navigator.geolocation.watchPosition(
+      (position) => {
+        this.setState({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        }, () => {
+          console.log(position);
+        });
+      },
+      (error) => console.log(error),
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 10 },
+    );
   }
 
   getPosition = () => {
     try {
-      const teste = navigator.geolocation.getCurrentPosition(
+      navigator.geolocation.getCurrentPosition(
         (location) => {
           console.log('aksjdkajdjasd');
           console.log(location);
+          const { coords } = location;
+          this.setState({
+            latitude: coords.latitude,
+            longitude: coords.longitude,
+          }, () => {
+            console.log(this.state);
+          });
         },
         (error) => {
           console.log(error);
@@ -57,15 +91,20 @@ export default class Maps extends Component {
       <View style={styles.container}>
         <MapView
           provider={PROVIDER_GOOGLE}
-          showsUserLocation
           style={styles.map}
-          region={{
-            latitude: 37.78825,
-            longitude: -122.4324,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}
-        />
+          followsUserLocation
+          region={this.state}
+          loadingEnabled
+          initialRegion={this.state}
+        >
+          <Marker
+            coordinate={{
+              latitude: this.state.latitude,
+              longitude: this.state.longitude
+            }}
+            image={require('~/assets/car.png')}
+          />
+        </MapView>
       </View>
     );
   }
