@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Component } from 'react';
 
 import {
   Text, Image, StyleSheet, Dimensions, ImageBackground, StatusBar, View
@@ -40,37 +40,45 @@ const styles = StyleSheet.create({
   }
 });
 
-export default function Main(){
-  const [userName, setUserName] = useState('');
-  const [loadingButton, setLoadingButton] = useState(false);
+export default class Main extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      userName: '',
+      loadingButton: false
+    };
+  }
 
-  return(
-    <View
-      style={styles.container}
-    >
-      <StatusBar barStyle="light-content" backgroundColor="#7159c1" />
 
+  render() {
+    return (
       <View
-        style={styles.form}
+        style={styles.container}
       >
+        <StatusBar barStyle="light-content" backgroundColor="#7159c1" />
+
+        <View
+          style={styles.form}
+        >
           <Text style={styles.textName}>Manda teu nome aí </Text>
           <TextInput
             label='Usuário'
-            value={userName}
+            value={this.state.userName}
             style={styles.inputUser}
-            onChangeText={ text => setUserName(text)}
+            onChangeText={ userName => this.setState({ userName })}
           />
           <Button
             color='#fff'
-            loading={loadingButton}
+            loading={this.state.loadingButton}
             style={styles.button}
-            icon="send" 
-            mode='outlined' 
-            onPress={() => setLoadingButton(true)}>
+            icon="send"
+            mode='outlined'
+            onPress={() => this.setState({ loadingButton: true })}>
               Manda pá geral
           </Button>
+        </View>
+
       </View>
-    
-    </View>
-  );
+    );
+  }
 }
