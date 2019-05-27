@@ -73,7 +73,11 @@ export default class Main extends Component {
             style={styles.button}
             icon="send"
             mode='outlined'
-            onPress={() => this.setState({ loadingButton: true })}>
+            onPress={() => {
+              this.setState({ loadingButton: true });
+              this.props.navigation.navigate('Maps');
+            }}
+            >
               Manda pá geral
           </Button>
         </View>
