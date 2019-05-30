@@ -75,7 +75,7 @@ export default class Main extends Component {
             mode='outlined'
             onPress={() => {
               this.setState({ loadingButton: true });
-              this.props.navigation.navigate('Maps');
+              this.props.navigation.navigate('Maps', { userName: this.state.userName });
             }}
             >
               Manda pá geral

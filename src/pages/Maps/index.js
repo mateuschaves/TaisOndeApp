@@ -1,5 +1,10 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, PermissionsAndroid } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  PermissionsAndroid,
+  Alert,
+} from 'react-native';
 
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 
@@ -24,10 +29,13 @@ export default class Maps extends Component {
       longitude: -35.9269217,
       latitudeDelta: 0.0122,
       longitudeDelta: 0.0121,
+      userName: '',
     };
   }
 
   componentDidMount() {
+    const userName = this.props.navigation.getParam('userName', '');
+    this.setState({ userName });
     this.requestLocationPermission();
     this.getPosition();
     this.watchPosition();
@@ -75,11 +83,8 @@ export default class Maps extends Component {
   requestLocationPermission = async () => {
     try {
       const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
-      console.log(granted);
-      if (granted) {
-        console.log("You can use the ACCESS_FINE_LOCATION");
-      } else {
-        console.log("ACCESS_FINE_LOCATION permission denied");
+      if (!granted) {
+        Alert.alert('Ops, algo deu errado !', 'Você precisa deixar a gente saber onde tu tá homii =(');
       }
     } catch (err) {
       console.warn(err);
@@ -87,6 +92,7 @@ export default class Maps extends Component {
   }
 
   render() {
+    const { latitude, longitude, userName } = this.state;
     return (
       <View style={styles.container}>
         <MapView
@@ -99,10 +105,11 @@ export default class Maps extends Component {
         >
           <Marker
             coordinate={{
-              latitude: this.state.latitude,
-              longitude: this.state.longitude
+              latitude,
+              longitude,
             }}
-            image={require('~/assets/car.png')}
+            title="Oi,"
+            description={userName || ''}
           />
         </MapView>
       </View>
